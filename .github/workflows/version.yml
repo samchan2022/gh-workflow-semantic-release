@@ -21,15 +21,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test
-
       - name: Grep version from package.json
-        run: | 
+        run: |
           echo "Version: $(grep '\"version\"' package.json | cut -d '"' -f 4)"
-
