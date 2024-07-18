@@ -30,5 +30,6 @@ jobs:
         run: npm test
 
       - name: Grep version from package.json
-        run: echo "Version: $(grep '\"version\"' package.json | cut -d '"' -f 4)"
+        run: | 
+          echo "Version: $(grep '\"version\"' package.json | cut -d '"' -f 4)"
 
