@@ -26,6 +26,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Grep version from package.json
+      - name: Get package name and version
+        id: get_pkg_info
         run: |
-          echo "Version: $(grep '\"version\"' package.json | cut -d '"' -f 4)"
+          echo "#----------------------------------------------"
+          echo "pwd: $(pwd)"
+          ls -lah
+          echo "#----------------------------------------------"
+          echo "version: $(jq -r .version package.json)"
+          echo "PACKAGE_NAME=$(jq -r .name package.json)" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+
+      - name: Use package name and version in subsequent steps
+        run: |
+          echo "Package name: $PACKAGE_NAME"
+          echo "Version: $PACKAGE_VERSION"
