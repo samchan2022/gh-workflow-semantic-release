@@ -9,7 +9,7 @@
     "semantic-release-local-dry-run": "npx semantic-release --no-ci --dry-run"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.0",
