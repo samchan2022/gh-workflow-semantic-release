@@ -1,4 +1,5 @@
 module.exports = {
+  repositoryUrl: "https://github.com/samchan2022/gh-workflow-semantic-release",
   branches: ["main"],
   plugins: [
     "@semantic-release/commit-analyzer", // Analyze commit messages to determine version bump
