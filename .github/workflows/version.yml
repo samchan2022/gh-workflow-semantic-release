@@ -11,6 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -77,6 +78,7 @@ jobs:
             });
             const pr = prs.find(pr => pr.base.ref === 'main');
             if (pr) {
+              console.log(pr.number);
               return pr.number;
             } else {
               throw new Error('No pull request found');
@@ -86,14 +88,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Auto Approve PR
-        if: steps.get_pr_number.outputs.result
+        if: steps.get_pr_number.outputs.result != ''
         uses: hmarr/auto-approve-action@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge Pull Request
-        if: steps.get_pr_number.outputs.result
-        uses: github-script@v6
+        if: steps.get_pr_number.outputs.result != ''
+        uses: actions/github-script@v6
         with:
           script: |
             const prNumber = ${{ steps.get_pr_number.outputs.result }};
