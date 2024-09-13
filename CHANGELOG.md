@@ -1,3 +1,10 @@
+## [1.1.0](https://github.com/samchan2022/gh-workflow-semantic-release/compare/v1.0.0...v1.1.0) (2024-09-13)
+
+### Features
+
+* add repo url in the release config ([51e7c80](https://github.com/samchan2022/gh-workflow-semantic-release/commit/51e7c803746978068034266e59b8ba5e3e0b6733))
+* add semantic-release on github action ([38df7db](https://github.com/samchan2022/gh-workflow-semantic-release/commit/38df7db1c5449b5b68395cc0cc7e23ff4dea0416))
+
 ## 1.0.0 (2024-09-13)
 
 ### Features
