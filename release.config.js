@@ -5,7 +5,6 @@ module.exports = {
     "@semantic-release/commit-analyzer", // Analyze commit messages to determine version bump
     "@semantic-release/release-notes-generator", // Generate release notes
     "@semantic-release/changelog", // Update changelog file
-    "@semantic-release/npm", // Publish to npm (if applicable)
     "@semantic-release/github", // Create GitHub releases
     [
       "@semantic-release/git", // Commit updated changelog and version files
