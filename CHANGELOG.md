@@ -1,3 +1,13 @@
+## [1.12.0](https://github.com/samchan2022/gh-workflow-semantic-release/compare/v1.11.0...v1.12.0) (2024-09-14)
+
+### Features
+
+* wip-20240914-140331 ([224771c](https://github.com/samchan2022/gh-workflow-semantic-release/commit/224771c5306a44917f616447585bd2ec040ca13c))
+* wip-20240914-140827 ([6993142](https://github.com/samchan2022/gh-workflow-semantic-release/commit/6993142f7056d12235f22d112fce39f6d0590a23))
+* wip-20240914-141240 ([9d4dbc4](https://github.com/samchan2022/gh-workflow-semantic-release/commit/9d4dbc4f0aeb80e08ccfc33743f763a4bb950102))
+* wip-20240914-141856 ([e7e0371](https://github.com/samchan2022/gh-workflow-semantic-release/commit/e7e0371756eff82930749542804be9d9c200fd2c))
+* wip-20240914-143219 ([e2f2545](https://github.com/samchan2022/gh-workflow-semantic-release/commit/e2f2545ea90efa2b729fddb732ccc60ef07458bb))
+
 ## [1.11.0](https://github.com/samchan2022/gh-workflow-semantic-release/compare/v1.10.0...v1.11.0) (2024-09-14)
 
 ### Features
