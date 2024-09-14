@@ -22,13 +22,13 @@ module.exports = {
     "@semantic-release/release-notes-generator", // Generate release notes
     "@semantic-release/changelog", // Update changelog file
     "@semantic-release/github", // Create GitHub releases
-    // [
-    //   "@semantic-release/git", // Commit updated changelog and version files
-    //   {
-    //     assets: ["package.json", "CHANGELOG.md"],
-    //     message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-    //   }
-    // ]
+    [
+      "@semantic-release/git", // Commit updated changelog and version files
+      {
+        assets: ["package.json", "CHANGELOG.md"],
+        message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ]
   ],
   preset: "conventionalcommits"
 };
