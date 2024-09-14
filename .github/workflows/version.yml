@@ -62,62 +62,38 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get Pull Request Number
-        id: get_pr_number
+      - name: Get Pull Request URL
+        id: get_pr_url
         uses: actions/github-script@v6
         with:
           script: |
-            const { data: prs } = await github.rest.pulls.list({
+            const pr = await github.rest.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
               head: `release-branch`,
               state: 'open',
             });
-            const pr = prs.find(pr => pr.base.ref === 'main');
-            if (pr) {
-              console.log(pr.number);
-              return pr.number;
+            const prData = pr.data.find(pr => pr.base.ref === 'main');
+            if (prData) {
+              console.log(`PR URL: ${prData.html_url}`);
+              return prData.html_url;
             } else {
-              throw new Error('No pull request found');
+              throw new Error('Pull request not found');
             }
           result-encoding: string
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Approve Pull Request
-        if: steps.get_pr_number.outputs.result != ''
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const prNumber = ${{ steps.get_pr_number.outputs.result }};
-            if (prNumber) {
-              await github.rest.pulls.createReview({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: prNumber,
-                event: 'APPROVE',
-              });
-            } else {
-              throw new Error('Pull request number is missing');
-            }
+        if: steps.get_pr_url.outputs.result != ''
+        run: gh pr review --approve "$PR_URL"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ steps.get_pr_url.outputs.result }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge Pull Request
-        if: steps.get_pr_number.outputs.result != ''
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const prNumber = ${{ steps.get_pr_number.outputs.result }};
-            if (prNumber) {
-              await github.rest.pulls.merge({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: prNumber,
-                merge_method: 'merge', // You can use 'squash' or 'rebase' if preferred
-              });
-            } else {
-              throw new Error('Pull request number is missing');
-            }
+        if: steps.get_pr_url.outputs.result != ''
+        run: gh pr merge "$PR_URL" --merge
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ steps.get_pr_url.outputs.result }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
