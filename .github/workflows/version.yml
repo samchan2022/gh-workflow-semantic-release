@@ -44,27 +44,27 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
 
-      - name: Extract Release Version from CHANGELOG.md
-        id: extract_version
-        run: |
-          # Adjust the following command to match how version info is formatted in CHANGELOG.md
-          RELEASE_VERSION=$(grep -oP '^## \[\K[^\]]+' CHANGELOG.md | head -n 1)
-          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+      # - name: Extract Release Version from CHANGELOG.md
+      #   id: extract_version
+      #   run: |
+      #     # Adjust the following command to match how version info is formatted in CHANGELOG.md
+      #     RELEASE_VERSION=$(grep -oP '^## \[\K[^\]]+' CHANGELOG.md | head -n 1)
+      #     echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
 
-      - name: Configure Git
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+      # - name: Configure Git
+      #   run: |
+      #     git config user.name "GitHub Actions"
+      #     git config user.email "actions@github.com"
 
-      - name: Setup SSH agent
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+      # - name: Setup SSH agent
+      #   uses: webfactory/ssh-agent@v0.5.3
+      #   with:
+      #     ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Commit and push changes
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add CHANGELOG.md
-          git commit -m "chore(release): $RELEASE_VERSION" || echo "No changes to commit"
-          git push origin ${{ github.ref_name }}  # This uses the target branch from the on event
+      # - name: Commit and push changes
+      #   run: |
+      #     git config user.name "github-actions"
+      #     git config user.email "github-actions@github.com"
+      #     git add CHANGELOG.md
+      #     git commit -m "chore(release): $RELEASE_VERSION" || echo "No changes to commit"
+      #     git push origin ${{ github.ref_name }}  # This uses the target branch from the on event
