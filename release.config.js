@@ -1,6 +1,9 @@
 module.exports = {
   repositoryUrl: "https://github.com/samchan2022/gh-workflow-semantic-release",
-  branches: ["t/1","main", "t/*"],
+  branches: [
+    { "name": "main" },
+    { "name": "t/1", "channel": "beta" }
+  ],
   plugins: [
     [
       "@semantic-release/commit-analyzer",
