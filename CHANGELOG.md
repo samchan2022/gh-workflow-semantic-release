@@ -1,3 +1,9 @@
+## [1.10.0](https://github.com/samchan2022/gh-workflow-semantic-release/compare/v1.9.0...v1.10.0) (2024-09-14)
+
+### Features
+
+* wip-20240914-114353 ([2f45d9d](https://github.com/samchan2022/gh-workflow-semantic-release/commit/2f45d9d3c335aa32604989eab53fa262d654e345))
+
 ## [1.9.0](https://github.com/samchan2022/gh-workflow-semantic-release/compare/v1.8.0...v1.9.0) (2024-09-14)
 
 ### Features
