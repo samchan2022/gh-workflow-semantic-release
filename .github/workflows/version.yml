@@ -1,5 +1,3 @@
-# .github/workflows/nodejs.yml
-
 name: Node.js CI
 
 on:
@@ -41,26 +39,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # - name: Add SSH Key and Start SSH Agent
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa_deploy
-      #     chmod 600 ~/.ssh/id_rsa_deploy
-      #     # ssh-keyscan github.com >> ~/.ssh/known_hosts
-      #     eval "$(ssh-agent -s)"
-      #     ssh-add ~/.ssh/id_rsa_deploy
-
       - name: Run Semantic Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub automatically provides this secret
-        # run: npx semantic-release
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+      - name: Extract Release Version from CHANGELOG.md
+        id: extract_version
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
-          npx semantic-release
+          # Adjust the following command to match how version info is formatted in CHANGELOG.md
+          RELEASE_VERSION=$(grep -oP '^## \[\K[^\]]+' CHANGELOG.md | head -n 1)
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
 
       - name: Configure Git
         run: |
@@ -72,17 +61,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-      # - name: Add SSH Key and Start SSH Agent
       - name: Commit and push changes
         run: |
-          git add .
-          git commit -m "chore(release): update changelog" || echo "No changes to commit"
-          git push origin main  # or your target branch
-
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa_deploy
-      #     chmod 600 ~/.ssh/id_rsa_deploy
-      #     # ssh-keyscan github.com >> ~/.ssh/known_hosts
-      #     eval "$(ssh-agent -s)"
-      #     ssh-add ~/.ssh/id_rsa_deploy
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add CHANGELOG.md
+          git commit -m "chore(release): $RELEASE_VERSION" || echo "No changes to commit"
+          git push origin ${{ github.ref_name }}  # This uses the target branch from the on event
