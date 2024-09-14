@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "22.8.0"
 
       - name: Get package name and version
         id: get_pkg_info
@@ -62,33 +62,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get Pull Request URL
-        id: get_pr_url
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const pr = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head: `release-branch`,
-              state: 'open',
-            });
-            const prData = pr.data.find(pr => pr.base.ref === 'main');
-            if (prData) {
-              console.log(`PR URL: ${prData.html_url}`);
-              return prData.html_url;
-            } else {
-              throw new Error('Pull request not found');
-            }
-          result-encoding: string
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Approve Pull Request
-        if: steps.get_pr_url.outputs.result != ''
-        run: gh pr review --approve "$PR_URL"
+        if: steps.create_pr.outputs.pull-request-url != ''
+        run: gh pr review --approve ${{ steps.create_pr.outputs.pull-request-number }}
         env:
-          PR_URL: ${{ steps.get_pr_url.outputs.result }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge Pull Request
