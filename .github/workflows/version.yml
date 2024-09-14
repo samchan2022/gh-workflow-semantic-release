@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "22.8.0"
 
       - name: Get package name and version
         id: get_pkg_info
@@ -61,8 +61,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
 
       - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.5.3
@@ -71,9 +71,6 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          # git add CHANGELOG.md
           git add .
           git commit -m "chore(release): $NEXT_VERSION [skip ci]" || echo "No changes to commit"
           git push origin ${{ github.ref_name }}  # This uses the target branch from the on event
