@@ -51,8 +51,8 @@ jobs:
       #     ssh-add ~/.ssh/id_rsa_deploy
 
       - name: Run Semantic Release
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub automatically provides this secret
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub automatically provides this secret
         # run: npx semantic-release
         run: |
           mkdir -p ~/.ssh
