@@ -6,8 +6,6 @@ on:
       - main
       - dev
       - stg
-      - 't/*'
-      - 't/1'
 
 
 jobs:
