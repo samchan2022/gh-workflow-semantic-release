@@ -21,6 +21,7 @@ module.exports = {
     ],
     "@semantic-release/release-notes-generator", // Generate release notes
     "@semantic-release/changelog", // Update changelog file
+    // "@semantic-release/npm", // update package.json
     "@semantic-release/github", // Create GitHub releases
     // [
     //   "@semantic-release/git", // Commit updated changelog and version files
