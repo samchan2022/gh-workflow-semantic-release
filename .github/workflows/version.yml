@@ -44,12 +44,40 @@ jobs:
           echo "BRANCH_NAME=${GITHUB_REF##*/}" 
           echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
-      - name: Run Semantic Release
+      - name: Determine Changelog File
+        id: determine_changelog
         env:
           BRANCH_NAME: ${{ env.BRANCH_NAME }}
+        run: |
+          # Determine the changelog file based on the current branch
+          CHANGELOG_FILE="CHANGELOG.md"  # Default
+    
+          case "$BRANCH_NAME" in
+            dev)
+              CHANGELOG_FILE="CHANGELOG_DEV.md"
+              ;;
+            qa)
+              CHANGELOG_FILE="CHANGELOG_QA.md"
+              ;;
+            stg)
+              CHANGELOG_FILE="CHANGELOG_STG.md"
+              ;;
+            main)
+              CHANGELOG_FILE="CHANGELOG.md"  # Or whatever file you use for main
+              ;;
+            *)
+              CHANGELOG_FILE="CHANGELOG_FEAT.md"  # Adjust this as needed for feature branches
+              ;;
+          esac
+    
+          echo "CHANGELOG_FILE=$CHANGELOG_FILE" >> $GITHUB_ENV
+
+
+      - name: Run Semantic Release
+        env:
+          CHANGELOG_FILE: ${{ env.CHANGELOG_FILE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "branch name: ${{ env.BRANCH_NAME }}"
           echo "bn: ${BRANCH_NAME}.md"
           npx semantic-release
 
@@ -62,9 +90,8 @@ jobs:
       - name: Extract Release Version from Branch-Specific CHANGELOG
         id: extract_version
         env:
-          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+          CHANGELOG_FILE: ${{ env.CHANGELOG_FILE }}
         run: |
-          CHANGELOG_FILE="CHANGELOG-${BRANCH_NAME}.md"
           echo "CHANGELOG_FILE: $CHANGELOG_FILE"
           if [ ! -f "$CHANGELOG_FILE" ]; then
             echo "Changelog file $CHANGELOG_FILE does not exist. Creating a new one."

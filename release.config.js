@@ -1,5 +1,5 @@
-const bn = `CHANGELOG-${process.env.BRANCH_NAME}.md`
-console.log("bn", bn);
+const changelogFile = process.env.CHANGELOG_FILE
+console.log("changelogFile", changelogFile);
 module.exports = {
   repositoryUrl: "https://github.com/samchan2022/gh-workflow-semantic-release",
   branches: ["main"],
@@ -25,7 +25,7 @@ module.exports = {
     [
       "@semantic-release/changelog",
       {
-        "changelogFile": bn
+        "changelogFile": changelogFile
       }
     ],
     "@semantic-release/github", // Create GitHub releases
