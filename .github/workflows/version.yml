@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+      - dev
+      - stg
 
 # BY PASS PROTECTED BRANCH WITH DEPLOY KEY
 jobs:

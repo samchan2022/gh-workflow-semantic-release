@@ -2,7 +2,11 @@ const changelogFile = process.env.CHANGELOG_FILE
 console.log("changelogFile", changelogFile);
 module.exports = {
   repositoryUrl: "https://github.com/samchan2022/gh-workflow-semantic-release",
-  branches: ["main"],
+  branches: [
+    "main",
+    { "name": "dev", "prerelease": true, "channel": "dev" },
+    { "name": "stg", "prerelease": true, "channel": "stg" },
+  ],
   plugins: [
     [
       "@semantic-release/commit-analyzer",
