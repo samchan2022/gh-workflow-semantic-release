@@ -25,7 +25,7 @@ module.exports = {
     [
       "@semantic-release/changelog",
       {
-        "changelogFile": "CHANGELOG-${process.env.BRANCH_NAME}.md"
+        "changelogFile": bn
       }
     ],
     "@semantic-release/github", // Create GitHub releases
