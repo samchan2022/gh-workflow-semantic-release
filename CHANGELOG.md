@@ -1,3 +1,9 @@
+## [1.18.8](https://github.com/samchan2022/gh-workflow-semantic-release/compare/v1.18.7...v1.18.8) (2024-10-28)
+
+### Bug Fixes
+
+* change log file ([bf5d42d](https://github.com/samchan2022/gh-workflow-semantic-release/commit/bf5d42d9a345e5d4af561ef4ef14dc0fc353a972))
+
 ## [1.18.1](https://github.com/samchan2022/gh-workflow-semantic-release/compare/v1.18.0...v1.18.1) (2024-10-28)
 
 ### Bug Fixes
