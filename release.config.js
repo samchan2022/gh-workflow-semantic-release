@@ -20,7 +20,12 @@ module.exports = {
       }
     ],
     "@semantic-release/release-notes-generator", // Generate release notes
-    "@semantic-release/changelog", // Update changelog file
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG-${process.env.BRANCH_NAME}.md"
+      }
+    ],
     "@semantic-release/github", // Create GitHub releases
     // [
     //   "@semantic-release/git", // Commit updated changelog and version files
