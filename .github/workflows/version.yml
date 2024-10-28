@@ -44,16 +44,29 @@ jobs:
 
       - name: Run Semantic Release
         env:
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
 
-      - name: Extract Release Version from CHANGELOG.md
+      # - name: Extract Release Version from CHANGELOG.md
+      #   id: extract_version
+      #   run: |
+      #     # Adjust the following command to match how version info is formatted in CHANGELOG.md
+      #     NEXT_VERSION=$(grep -oP '^## \[\K[^\]]+' CHANGELOG.md | head -n 1)
+      #     echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
+      - name: Extract Release Version from Branch-Specific CHANGELOG
         id: extract_version
+        env:
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
         run: |
-          # Adjust the following command to match how version info is formatted in CHANGELOG.md
-          NEXT_VERSION=$(grep -oP '^## \[\K[^\]]+' CHANGELOG.md | head -n 1)
+          CHANGELOG_FILE="CHANGELOG-${BRANCH_NAME}.md"
+          if [ ! -f "$CHANGELOG_FILE" ]; then
+            echo "Changelog file $CHANGELOG_FILE does not exist. Creating a new one."
+            touch "$CHANGELOG_FILE"
+          fi
+          # Extract version from branch-specific CHANGELOG file
+          NEXT_VERSION=$(grep -oP '^## \[\K[^\]]+' "$CHANGELOG_FILE" | head -n 1)
           echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
-
       - name: Update package.json version
         run: |
           if [ -n "$NEXT_VERSION" ]; then
