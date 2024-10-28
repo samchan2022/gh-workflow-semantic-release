@@ -74,6 +74,7 @@ jobs:
       - name: Commit and push changes
         run: |
           echo 123 > new.txt
+          cat new.txt
           git add package.json package-lock.json CHANGELOG.md new.txt
           git commit -m "chore(release): $NEXT_VERSION [skip ci]" || echo "No changes to commit"
           git push origin ${{ github.ref_name }}  # This uses the target branch from the on event
