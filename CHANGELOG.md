@@ -1,3 +1,9 @@
+## [1.18.1](https://github.com/samchan2022/gh-workflow-semantic-release/compare/v1.18.0...v1.18.1) (2024-10-28)
+
+### Bug Fixes
+
+* Update version.yml ([efd9ac3](https://github.com/samchan2022/gh-workflow-semantic-release/commit/efd9ac3ac31368b9f57625dff1fa89f0f7d11c90))
+
 ## [1.18.0](https://github.com/samchan2022/gh-workflow-semantic-release/compare/v1.17.0...v1.18.0) (2024-09-14)
 
 ### Features
