@@ -40,14 +40,17 @@ jobs:
         run: npm ci
 
       - name: Set Branch Name Environment Variable
-        run: echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+        run: | 
+          echo "BRANCH_NAME=${GITHUB_REF##*/}" 
+          echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Run Semantic Release
         env:
           BRANCH_NAME: ${{ env.BRANCH_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "branch name: $BRANCH_NAME"
+          echo "branch name: ${{ env.BRANCH_NAME }}"
+          echo "bn: ${BRANCH_NAME}.md"
           npx semantic-release
 
       # - name: Extract Release Version from CHANGELOG.md
@@ -62,6 +65,7 @@ jobs:
           BRANCH_NAME: ${{ env.BRANCH_NAME }}
         run: |
           CHANGELOG_FILE="CHANGELOG-${BRANCH_NAME}.md"
+          echo "CHANGELOG_FILE: $CHANGELOG_FILE"
           if [ ! -f "$CHANGELOG_FILE" ]; then
             echo "Changelog file $CHANGELOG_FILE does not exist. Creating a new one."
             touch "$CHANGELOG_FILE"

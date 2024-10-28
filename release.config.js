@@ -1,3 +1,5 @@
+const bn = `CHANGELOG-${process.env.BRANCH_NAME}.md`
+console.log("bn", bn);
 module.exports = {
   repositoryUrl: "https://github.com/samchan2022/gh-workflow-semantic-release",
   branches: ["main"],
