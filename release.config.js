@@ -6,6 +6,7 @@ module.exports = {
     "main",
     { "name": "dev", "prerelease": true, "channel": "dev" },
     { "name": "stg", "prerelease": true, "channel": "stg" },
+    { "name": "/^release*$/", "prerelease": true, "channel": "release" },
   ],
   plugins: [
     [
