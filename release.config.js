@@ -1,47 +1,67 @@
-const changelogFile = process.env.CHANGELOG_FILE
-console.log("changelogFile", changelogFile);
+const ref = process.env.GITHUB_REF;
+const branch = ref.split('/').pop();
+
 module.exports = {
-  repositoryUrl: "https://github.com/samchan2022/gh-workflow-semantic-release",
   branches: [
-    "main",
-    { "name": "dev", "prerelease": true, "channel": "dev" },
-    { "name": "stg", "prerelease": true, "channel": "stg" },
-    { "name": "/^release*$/", "prerelease": true, "channel": "release" },
+    'main',
+    { name: 'dev', prerelease: 'beta' },
+    { name: 'rc', prerelease: true },
+    { name: 'hotfix', prerelease: true },
+    { name: 'release-*', prerelease: true },
   ],
+
   plugins: [
     [
-      "@semantic-release/commit-analyzer",
+      '@semantic-release/commit-analyzer',
       {
-        // Custom configuration for commit analysis
+        preset: 'conventionalCommits',
         releaseRules: [
-          { type: "feat", release: "minor" }, // New features should trigger a minor version bump
-          { type: "fix", release: "patch" },  // Fixes should trigger a patch version bump
-          { type: "perf", release: "patch" }, // Performance improvements should trigger a patch version bump
-          { type: "BREAKING CHANGE", release: "major" }, // Breaking changes should trigger a major version bump
-          { type: "chore", release: false }, // Chore commits don't trigger a release
-          { type: "docs", release: false },  // Documentation updates don't trigger a release
-          { type: "style", release: false }, // Style changes don't trigger a release
-          { type: "refactor", release: false } // Refactors don't trigger a release
+          { type: 'build', release: 'patch' },
+          { type: 'chore', release: 'patch' },
+          { type: 'ci', release: 'patch' },
+          { type: 'docs', release: false },
+          { type: 'feat', release: 'minor' },
+          { type: 'fix', release: 'patch' },
+          { type: 'perf', release: 'patch' },
+          { type: 'refactor', release: false },
+          { type: 'style', release: false },
+          { type: 'test', release: 'patch' },
         ],
-        preset: "conventionalcommits" // Ensure conventional commits style
-      }
+        presetConfig: {
+          types: [
+            { type: 'build', section: 'Build System' },
+            { type: 'chore', section: 'Chores' },
+            { type: 'ci', section: 'CI Configuration' },
+            { type: 'docs', section: 'Documentation' },
+            { type: 'feat', section: 'Features' },
+            { type: 'fix', section: 'Bug Fixes' },
+            { type: 'perf', section: 'Performance Improvements' },
+            { type: 'refactor', section: 'Code Refactoring' },
+            { type: 'style', section: 'Styles' },
+            { type: 'test', section: 'Tests' },
+          ],
+        },
+      },
     ],
-    "@semantic-release/release-notes-generator", // Generate release notes
+    '@semantic-release/release-notes-generator',
     [
-      "@semantic-release/changelog",
+      '@semantic-release/changelog',
       {
-        "changelogFile": changelogFile
+        changelogFile: `CHANGELOG_${branch}.md`,
+      },
+    ],
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": false  // This updates package.json but skips publishing
       }
     ],
-    "@semantic-release/github", // Create GitHub releases
-    // [
-    //   "@semantic-release/git", // Commit updated changelog and version files
-    //   {
-    //     assets: ["package.json", "CHANGELOG.md"],
-    //     message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-    //   }
-    // ]
+    [
+      "@semantic-release/git",
+      {
+        assets: ["package.json", `CHANGELOG_${branch}.md`],
+        message: "chore(release): ${nextRelease.version} [skip ci]"
+      }
+    ],
   ],
-  preset: "conventionalcommits"
 };
-

@@ -6,6 +6,7 @@ on:
       - main
       - dev
       - stg
+      - release-*
 
 # BY PASS PROTECTED BRANCH WITH DEPLOY KEY
 jobs:
@@ -22,57 +23,57 @@ jobs:
         with:
           node-version: "22.8.0"
 
-      - name: Get package name and version
-        id: get_pkg_info
-        run: |
-          echo "#----------------------------------------------"
-          echo "pwd: $(pwd)"
-          ls -lah
-          echo "#----------------------------------------------"
-          echo "version: $(jq -r .version package.json)"
-          echo "PACKAGE_NAME=$(jq -r .name package.json)" >> $GITHUB_ENV
-          echo "PACKAGE_VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+      # - name: Get package name and version
+      #   id: get_pkg_info
+      #   run: |
+      #     echo "#----------------------------------------------"
+      #     echo "pwd: $(pwd)"
+      #     ls -lah
+      #     echo "#----------------------------------------------"
+      #     echo "version: $(jq -r .version package.json)"
+      #     echo "PACKAGE_NAME=$(jq -r .name package.json)" >> $GITHUB_ENV
+      #     echo "PACKAGE_VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
 
-      - name: Use package name and version in subsequent steps
-        run: |
-          echo "Package name: $PACKAGE_NAME"
-          echo "Version: $PACKAGE_VERSION"
+      # - name: Use package name and version in subsequent steps
+      #   run: |
+      #     echo "Package name: $PACKAGE_NAME"
+      #     echo "Version: $PACKAGE_VERSION"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      - name: Set Branch Name Environment Variable
-        run: | 
-          echo "BRANCH_NAME=${GITHUB_REF##*/}" 
-          echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+      # - name: Set Branch Name Environment Variable
+      #   run: | 
+      #     echo "BRANCH_NAME=${GITHUB_REF##*/}" 
+      #     echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
-      - name: Determine Changelog File
-        id: determine_changelog
-        env:
-          BRANCH_NAME: ${{ env.BRANCH_NAME }}
-        run: |
-          # Determine the changelog file based on the current branch
-          CHANGELOG_FILE="CHANGELOG.md"  # Default
+      # - name: Determine Changelog File
+      #   id: determine_changelog
+      #   env:
+      #     BRANCH_NAME: ${{ env.BRANCH_NAME }}
+      #   run: |
+      #     # Determine the changelog file based on the current branch
+      #     CHANGELOG_FILE="CHANGELOG.md"  # Default
     
-          case "$BRANCH_NAME" in
-            dev)
-              CHANGELOG_FILE="CHANGELOG_DEV.md"
-              ;;
-            qa)
-              CHANGELOG_FILE="CHANGELOG_QA.md"
-              ;;
-            stg)
-              CHANGELOG_FILE="CHANGELOG_STG.md"
-              ;;
-            main)
-              CHANGELOG_FILE="CHANGELOG.md"  # Or whatever file you use for main
-              ;;
-            *)
-              CHANGELOG_FILE="CHANGELOG_FEAT.md"  # Adjust this as needed for feature branches
-              ;;
-          esac
+      #     case "$BRANCH_NAME" in
+      #       dev)
+      #         CHANGELOG_FILE="CHANGELOG_DEV.md"
+      #         ;;
+      #       qa)
+      #         CHANGELOG_FILE="CHANGELOG_QA.md"
+      #         ;;
+      #       stg)
+      #         CHANGELOG_FILE="CHANGELOG_STG.md"
+      #         ;;
+      #       main)
+      #         CHANGELOG_FILE="CHANGELOG.md"  # Or whatever file you use for main
+      #         ;;
+      #       *)
+      #         CHANGELOG_FILE="CHANGELOG_FEAT.md"  # Adjust this as needed for feature branches
+      #         ;;
+      #     esac
     
-          echo "CHANGELOG_FILE=$CHANGELOG_FILE" >> $GITHUB_ENV
+      #     echo "CHANGELOG_FILE=$CHANGELOG_FILE" >> $GITHUB_ENV
 
 
       - name: Run Semantic Release
@@ -89,44 +90,44 @@ jobs:
       #     # Adjust the following command to match how version info is formatted in CHANGELOG.md
       #     NEXT_VERSION=$(grep -oP '^## \[\K[^\]]+' CHANGELOG.md | head -n 1)
       #     echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
-      - name: Extract Release Version from Branch-Specific CHANGELOG
-        id: extract_version
-        env:
-          CHANGELOG_FILE: ${{ env.CHANGELOG_FILE }}
-        run: |
-          echo "CHANGELOG_FILE: $CHANGELOG_FILE"
-          if [ ! -f "$CHANGELOG_FILE" ]; then
-            echo "Changelog file $CHANGELOG_FILE does not exist. Creating a new one."
-            touch "$CHANGELOG_FILE"
-          fi
-          # Extract version from branch-specific CHANGELOG file
-          NEXT_VERSION=$(grep -oP '^## \[\K[^\]]+' "$CHANGELOG_FILE" | head -n 1)
-          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
-      - name: Update package.json version
-        run: |
-          if [ -n "$NEXT_VERSION" ]; then
-            npm version $NEXT_VERSION --no-git-tag-version
-          else
-            echo "No version found to update"
-          fi
+      # - name: Extract Release Version from Branch-Specific CHANGELOG
+      #   id: extract_version
+      #   env:
+      #     CHANGELOG_FILE: ${{ env.CHANGELOG_FILE }}
+      #   run: |
+      #     echo "CHANGELOG_FILE: $CHANGELOG_FILE"
+      #     if [ ! -f "$CHANGELOG_FILE" ]; then
+      #       echo "Changelog file $CHANGELOG_FILE does not exist. Creating a new one."
+      #       touch "$CHANGELOG_FILE"
+      #     fi
+      #     # Extract version from branch-specific CHANGELOG file
+      #     NEXT_VERSION=$(grep -oP '^## \[\K[^\]]+' "$CHANGELOG_FILE" | head -n 1)
+      #     echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
+      # - name: Update package.json version
+      #   run: |
+      #     if [ -n "$NEXT_VERSION" ]; then
+      #       npm version $NEXT_VERSION --no-git-tag-version
+      #     else
+      #       echo "No version found to update"
+      #     fi
 
-      - name: Configure Git
-        run: |
-          # git config user.name "github-actions"
-          # git config user.email "github-actions@github.com"
-          git config user.name "semantic-release-bot"
-          git config user.email "semantic-release-bot@users.noreply.github.com"
+      # - name: Configure Git
+      #   run: |
+      #     # git config user.name "github-actions"
+      #     # git config user.email "github-actions@github.com"
+      #     git config user.name "semantic-release-bot"
+      #     git config user.email "semantic-release-bot@users.noreply.github.com"
 
-      - name: Setup SSH agent
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+      # - name: Setup SSH agent
+      #   uses: webfactory/ssh-agent@v0.5.3
+      #   with:
+      #     ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Commit and push changes
-        run: |
-          echo 1235 > new.txt
-          cat new.txt
-          # git add package.json package-lock.json CHANGELOG.md new.txt
-          git add .
-          git commit -m "chore(release): $NEXT_VERSION [skip ci]" || echo "No changes to commit"
-          git push origin ${{ github.ref_name }}  # This uses the target branch from the on event
+      # - name: Commit and push changes
+      #   run: |
+      #     echo 1235 > new.txt
+      #     cat new.txt
+      #     # git add package.json package-lock.json CHANGELOG.md new.txt
+      #     git add .
+      #     git commit -m "chore(release): $NEXT_VERSION [skip ci]" || echo "No changes to commit"
+      #     git push origin ${{ github.ref_name }}  # This uses the target branch from the on event
